@@ -48,7 +48,7 @@ class thread_send(Thread):
         countdown = 0
         while CONNECTED:
             try:
-                data = self.stream.read(1024, exception_on_overflow=False) # get a slice of 10 bits from the microphone's stream 
+                data = self.stream.read(1024, exception_on_overflow=False) # get a slice from the microphone's stream 
                 countdown -= 1
                 if (audioop.rms(data, 2) > trigger): # if a high audio level is detected, init countdown
                     countdown = tolerance
