@@ -30,7 +30,7 @@ class thread_recv(Thread):
                         gui['widget']['user'][len(gui['widget']['user'])-1].grid(row=len(gui['widget']['user']) + 1, column=0)
                         
                 elif (decoded[0:6] == '[VOID]'): # [VOID] used to reset initial music volume
-                    pygame.mixer.music.set_volume(1)
+                    pygame.mixer.music.set_volume(1) # Restores the initial volume of music
                     
                 else:
                     self.stream.write(data) # write incoming data in an output pyaudio stream for play it
