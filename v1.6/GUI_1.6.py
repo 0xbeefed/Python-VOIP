@@ -60,7 +60,7 @@ class thread_send(Thread):
                 if (countdown > 0): # the countdown allows transmit the whole sentence without breaking it
                     SOCK.send(data)
                 else: # for reset music volume
-                    SOCK.send('[VOID]') 
+                    SOCK.send(b'[VOID]') 
             except:
                 CONNECTED = False
 
