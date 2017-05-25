@@ -6,7 +6,6 @@ import audioop                    # For rms
 from tkinter.filedialog import *  # For loading menu
 import pygame                     # To manage musics
 import os                         # To recover all files in directory
-import time                       # To create delay
 
 class thread_recv(Thread):
     def __init__(self, stream):
