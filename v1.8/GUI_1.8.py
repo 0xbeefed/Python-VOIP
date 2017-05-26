@@ -268,12 +268,10 @@ gui['widget']['playButton'].grid(row=0, column=1)
 gui['widget']['rightButton'] = Button(gui['frame']['musicFrame2'], text='->', width=3, command=right)
 gui['widget']['rightButton'].grid(row=0, column=2)
 
-
 gui['frame']['musicFrame3'] = Frame(gui['window'])
 gui['frame']['musicFrame3'].grid(row=5, column=0)
 gui['widget']['titleMusic'] = Label(gui['frame']['musicFrame3'], text='No music')
 gui['widget']['titleMusic'].grid(row=0, column=0)
-
 
 gui['window'].mainloop()
 
