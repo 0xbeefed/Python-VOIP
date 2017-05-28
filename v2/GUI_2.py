@@ -124,13 +124,6 @@ def toggle_connect():
         # Disconnecting
         CONNECTED = False
         SOCK.close()
-        
-        # Close audio
-        streamInput.stop_stream()
-        streamInput.close()
-        streamOutput.stop_stream()
-        streamOutput.close()
-        audio.terminate()
 
         # Reset GUI
         for logLabel in gui['widget']['user']:
