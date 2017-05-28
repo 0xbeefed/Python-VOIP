@@ -1,3 +1,7 @@
+#########################################################
+##### Python VOIP - Alexandre GAULT, Arthur CHARLES #####
+#########################################################
+
 from tkinter import *             # For GUI
 import socket                     # For networking
 from threading import Thread      # For multi-threading
