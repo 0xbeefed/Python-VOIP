@@ -280,9 +280,9 @@ gui['widget']['titleMusic'].grid(row=0, column=0)
 
 gui['window'].mainloop()
 
-gui['window'].after_cancel(CHECK_ID) # When the window is close, stop the function checkTrack()
+gui['window'].after_cancel(CHECK_ID) # When the window is closed, stop the function checkTrack()
 
-pygame.quit() # When the window is close, stop the music player
+pygame.quit() # When the window is closed, stop the music player
 CONNECTED = False
 
 
