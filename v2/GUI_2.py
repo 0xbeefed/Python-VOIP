@@ -46,6 +46,8 @@ class thread_recv(Thread):
                     pygame.mixer.music.set_volume(VOLUME)
             except:
                 CONNECTED = False
+        self.stream.stop_stream()
+        self.stream.close()
                 
 class thread_send(Thread):
     def __init__(self, stream):
@@ -70,6 +72,8 @@ class thread_send(Thread):
                     SOCK.send(b'[VOID]') 
             except:
                 CONNECTED = False
+        self.stream.stop_stream()
+        self.stream.close()
 
 def toggle_connect():
     global CONNECTED, PSEUDO, SOCK
