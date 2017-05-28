@@ -274,5 +274,8 @@ gui['widget']['titleMusic'] = Label(gui['frame']['musicFrame3'], text='No music'
 gui['widget']['titleMusic'].grid(row=0, column=0)
 
 gui['window'].mainloop()
+CONNECTED = False
+receving.join()
+sending.join()
 
 pygame.quit()
