@@ -34,13 +34,14 @@ class thread_recv(Thread):
                     fade = True # Restores the initial volume of music with fade
                 else:
                     fade = False
-                    pygame.mixer.music.set_volume(0.1) # When client receives data, decrease the volume of music
+                    VOLUME = 0.1
+                    pygame.mixer.music.set_volume(VOLUME) # When client receives data, decrease the volume of music
                     self.stream.write(data) # write incoming data in an output pyaudio stream for play it
+                if fade and VOLUME < 1:
+                    VOLUME += 0.01
+                    pygame.mixer.music.set_volume(VOLUME)
             except:
                 CONNECTED = False
-            if fade and VOLUME < 1:
-                VOLUME += 0.01
-                
                 
 class thread_send(Thread):
     def __init__(self, stream):
