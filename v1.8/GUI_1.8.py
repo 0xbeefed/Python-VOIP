@@ -8,23 +8,14 @@ import pygame                     # To manage musics
 import os                         # To recover all files in directory
 import time                       # For fade
 
-class thread_fade(Thread):
-    def __init__(self):
-        Thread.__init__(self)
-
-    def run(self):
-        volume = pygame.mixer.music.get_volume()
-        for i in range(int(volume*100), 100): # Increase the volume of mixer with steps of 0.01
-            pygame.mixer.music.set_volume(i/100)
-            time.sleep(0.01)
-
 class thread_recv(Thread):
     def __init__(self, stream):
         Thread.__init__(self)
         self.stream = stream
         
     def run(self):
-        global SOCK, CONNECTED
+        global SOCK, CONNECTED, VOLUME
+        fade = False
         while CONNECTED:
             try:
                 data = SOCK.recv(1024)
@@ -39,15 +30,18 @@ class thread_recv(Thread):
                     for pseudo in logList: # And create new ones
                         gui['widget']['user'].append(Label(gui['frame']['loglist'], text=pseudo)) 
                         gui['widget']['user'][len(gui['widget']['user'])-1].grid(row=len(gui['widget']['user']) + 1, column=0)
-                        
+                    fade = True
                 elif (decoded[0:6] == '[VOID]'): # [VOID] used to reset initial music volume
-                    thread_fade().start() # Restores the initial volume of music with fade
+                    fade = True # Restores the initial volume of music with fade
                 else:
-                    self.stream.write(data) # write incoming data in an output pyaudio stream for play it
+                    fade = False
                     pygame.mixer.music.set_volume(0.1) # When client receives data, decrease the volume of music
-
+                    self.stream.write(data) # write incoming data in an output pyaudio stream for play it
             except:
                 CONNECTED = False
+            if fade and VOLUME < 1:
+                VOLUME += 0.01
+                
                 
 class thread_send(Thread):
     def __init__(self, stream):
@@ -137,13 +131,14 @@ def toggle_connect():
         gui['widget']['connectButton'].config(text='Connect')
 
 def loadDir():
-    global DIRECTORY, MUSICS, INDEXPLAYLIST
+    global DIRECTORY, MUSICS, INDEXPLAYLIST, VOLUME
     DIRECTORY = askdirectory(title='Load directory') # Recovers directory with musics  
     if DIRECTORY != '': # If user cancel, DIRECTORY == ''
         MUSICS = os.listdir(DIRECTORY) # Recovers the list of files in the directory
         MUSICS = [file for file in MUSICS if file[-4:]=='.mp3' or file[-4:]=='.wav'] # If in the directory, there are files that are not music, the deletes in the list 
         if MUSICS != []:
             pygame.mixer.music.load(DIRECTORY + '/' + MUSICS[INDEXPLAYLIST]) # Load the first music in the pygame.mixer
+            pygame.mixer.music.set_volume(VOLUME)
             pygame.mixer.music.play()
             gui['widget']['titleMusic'].config(text=MUSICS[INDEXPLAYLIST])
     
@@ -204,6 +199,7 @@ PSEUDO = 'Groot'
 INDEXPLAYLIST = 0
 MUSICS = []
 DIRECTORY = ''
+VOLUME = 1
 
 pygame.init() # Initialize all imported pygame modules
 
