@@ -38,14 +38,15 @@ class thread_recv(Thread):
                     fade = True # Restores the initial volume of music with fade
                 else:
                     fade = False
-                    VOLUME = 0.1
+                    VOLUME = 0.01
                     pygame.mixer.music.set_volume(VOLUME) # When client receives data, decrease the volume of music
                     self.stream.write(data) # write incoming data in an output pyaudio stream for play it
-                if fade and VOLUME < 1:
+                if fade and VOLUME < 0.75:
                     VOLUME += 0.01
                     pygame.mixer.music.set_volume(VOLUME)
             except:
-                CONNECTED = False
+                if CONNECTED:
+                    toggle_connect()
         self.stream.stop_stream()
         self.stream.close()
                 
@@ -56,8 +57,8 @@ class thread_send(Thread):
         
     def run(self):
         global CONNECTED, SOCK
-        tolerance = 70 # loop countdown tolerance
-        trigger = 500  # minimum level for triggering send
+        tolerance = 40 # loop countdown tolerance
+        trigger = 1700  # minimum level for triggering send
         countdown = 0
         while CONNECTED:
             try:
@@ -71,7 +72,8 @@ class thread_send(Thread):
                 else: # for reset music volume
                     SOCK.send(b'[VOID]') 
             except:
-                CONNECTED = False
+                if CONNECTED:
+                    toggle_connect()
         self.stream.stop_stream()
         self.stream.close()
 
@@ -98,12 +100,12 @@ def toggle_connect():
             CONNECTED = True
 
             audio = pyaudio.PyAudio()
-            streamInput = audio.open(format=pyaudio.paInt16,
+            streamInput = audio.open(format=pyaudio.paInt32,
                 channels=1,
                 rate=44100,
                 input=True,
                 frames_per_buffer=1024) # audio stream that's read client microphone
-            streamOutput = audio.open(format=pyaudio.paInt16,
+            streamOutput = audio.open(format=pyaudio.paInt32,
                 channels=1,
                 rate=44100,
                 output=True,
@@ -209,7 +211,7 @@ PSEUDO = 'Groot'
 INDEXPLAYLIST = 0
 MUSICS = []
 DIRECTORY = ''
-VOLUME = 1
+VOLUME = 0.85
 CHECK_ID = ''
 
 pygame.init() # Initialize all imported pygame modules
@@ -280,9 +282,9 @@ gui['widget']['titleMusic'].grid(row=0, column=0)
 
 gui['window'].mainloop()
 
-gui['window'].after_cancel(CHECK_ID) # When the window is closed, stop the function checkTrack()
+gui['window'].after_cancel(CHECK_ID) # When the window is close, stop the function checkTrack()
 
-pygame.quit() # When the window is closed, stop the music player
+pygame.quit() # When the window is close, stop the music player
 CONNECTED = False
 
 
